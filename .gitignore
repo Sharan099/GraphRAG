@@ -1,0 +1,10 @@
+data/*.json
+data/.cache/
+data/.batch_id
+data/.seq_progress.json
+.env
+__pycache__/
+*.pyc
+V1
+*.sh
+*.bat 
