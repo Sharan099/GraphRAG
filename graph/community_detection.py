@@ -1,22 +1,3 @@
-"""
-graph/community.py — Step 5
-
-Louvain community detection + LLM-generated summaries per cluster.
-
-Why community detection matters
---------------------------------
-- Dense clusters in a maintenance graph = ATA chapters, subsystems
-- Pre-computing a summary per cluster means a global query like
-  "summarise all fuel system warnings" is answered from ONE community
-  summary node, not from traversing thousands of edges at query time.
-- Community nodes in Neo4j become Path 4 in the hybrid retriever.
-
-Algorithm: Louvain (python-louvain) on an undirected projection
-           of the entity graph (no Chunk nodes — entity-only view).
-
-Install: pip install python-louvain networkx
-"""
-
 import json
 import os
 import sys
