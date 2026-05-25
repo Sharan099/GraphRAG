@@ -1,21 +1,3 @@
-"""
-data/chunker.py — Step 1 + Step 15 (Chunking Strategy)
-
-Procedure-boundary-aware chunking for the Aquila AT01 maintenance manual.
-
-Critical design decisions from the 27-step methodology
--------------------------------------------------------
-Step 3  (Hierarchy):    Chunks NEVER split a WARNING block from the step it precedes.
-Step 4  (Patterns):     Detects 6 structural patterns: WARNING/CAUTION/NOTE,
-                        numbered steps, tool tables, part numbers, measurements,
-                        ATA task headers.
-Step 15 (Chunking):     400-word target. 80-word overlap.
-Step 6  (Query needs):  "oil filter replacement" must retrieve the WARNING +
-                        procedure together. Splitting them loses the safety link.
-
-Output: data/chunks.json
-"""
-
 import json
 import re
 import sys

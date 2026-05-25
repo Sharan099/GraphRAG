@@ -1,20 +1,3 @@
-"""
-graph/builder.py — Step 4
-
-Build the Neo4j knowledge graph with:
-  - Chunk nodes (with vector embeddings for semantic search)
-  - Entity nodes (Component, System, Tool, Warning, Step, Requirement, Measurement)
-  - DocumentSection nodes (TOC hierarchy)
-  - All extracted relationships
-  - CONTAINS: Chunk → entities found in that chunk
-  - SOURCED_FROM: entity → DocumentSection
-  - ADJACENT_TO: consecutive Chunk → Chunk (for context expansion)
-  - Vector index on Chunk.embedding and entity nodes
-
-This dual structure means EVERY query has at least two ways to find
-relevant content: graph traversal AND vector similarity on chunks.
-"""
-
 import json
 import sys
 from pathlib import Path

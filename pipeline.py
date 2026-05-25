@@ -1,13 +1,3 @@
-"""
-pipeline.py — AirGraph Assist
-
-Wires all 6 steps:
-  graph_builder (Step 4) → retriever (Step 6) → LLM (Claude API)
-
-Startup loads: chunks.json, embeddings.json, communities.json
-into the HybridRetriever so all 4 search paths are live immediately.
-"""
-
 import json
 import threading
 import time

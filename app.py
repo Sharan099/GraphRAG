@@ -1,10 +1,3 @@
-"""
-app.py
-
-AirGraph Assist — Aerospace Maintenance Intelligence UI
-Fixed + Improved: real-time pipeline steps, clickable samples,
-typed node/edge colors, GraphRAG explainer, Node Guide tab.
-"""
 
 import streamlit as st
 import plotly.graph_objects as go

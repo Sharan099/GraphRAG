@@ -1,24 +1,3 @@
-"""
-benchmark/latency_tracker.py
-─────────────────────────────
-Automated benchmarking pipeline.
-
-WHAT WE MEASURE:
-  T1: Entity extraction          (target: <20ms)
-  T2: Neo4j graph query          (target: <300ms)
-  T3: ChromaDB vector search     (target: <200ms)
-  T4: Node ranking + pruning     (target: <50ms)
-  T5: Prompt compression         (target: <10ms)
-  T6: LLM generation             (target: <1200ms)
-  ─────────────────────────────────────────
-  TOTAL                          (target: <2000ms)
-
-HOW TO IDENTIFY YOUR BOTTLENECK:
-  If T2 > 300ms → Neo4j index missing (add CREATE INDEX)
-  If T3 > 200ms → ChromaDB on CPU, use GPU or smaller embedding model
-  If T6 > 1500ms → LLM too large; try TinyLlama, or reduce num_ctx
-  If T4+T5 > 200ms → context too large; reduce TOP_K_VECTOR
-"""
 import sys
 import time
 import json

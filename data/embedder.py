@@ -1,20 +1,3 @@
-"""
-data/embedder.py — Step 3
-
-Generate 384-dimensional embeddings for every chunk and entity description.
-Uses sentence-transformers (free, local, CPU-friendly).
-
-Why dual embedding (chunks + entities)
----------------------------------------
-- Chunk embeddings: semantic search over raw manual text. When graph
-  traversal finds no matching entities, vector search always returns
-  something relevant. This is what prevents empty retrieval.
-- Entity embeddings: find semantically similar entities even when the
-  query wording differs (e.g. "hydraulic actuator" matches "actuator (hydraulic)").
-
-Output: data/embeddings.json  →  {chunk_id: [0.1, 0.2, ...], entity_id: [...]}
-"""
-
 import json
 import sys
 import time
