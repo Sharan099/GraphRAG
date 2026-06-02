@@ -141,9 +141,7 @@ Evaluation outputs:
 
 ## Demo Video
 
-<video width="800" controls>
-  <source src="assets/AirGraph.mp4" type="video/mp4">
-</video>
+[![GraphRAG Demo](assets/Thumbnail.png)](assets/AirGraph.mp4)
 
 ## Metrics Screenshot / Image
 
