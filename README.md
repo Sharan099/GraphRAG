@@ -142,6 +142,9 @@ Evaluation outputs:
 ## Demo Video
 
 - Add your demo link here: [Demo Video](https://example.com/demo)
+<video width="800" controls>
+  <source src="assets/graphrag-demo.mp4" type="video/mp4">
+</video>
 
 ## Metrics Screenshot / Image
 
