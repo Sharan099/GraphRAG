@@ -36,7 +36,7 @@ from config import (
     EXTRACTION_MODEL, EXTRACTION_MAX_TOKENS,
     BATCH_ID_FILE, PROGRESS_FILE,
 )
-from schema import (
+from data.schema import (
     build_extraction_schema_prompt,
     EntityRegistry,
 )

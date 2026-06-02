@@ -156,7 +156,7 @@ python data/extractor.py cancel   # cancel a stuck batch
 ```
 airgraph-assist/
 ├── config.py               # All settings — single source of truth
-├── schema.py               # Pydantic v2 entity schema + ID generation
+├── data/schema.py          # Pydantic v2 entity schema + ID generation
 ├── pipeline.py             # Main query pipeline (thread-safe singleton)
 ├── app.py                  # Streamlit UI
 │
@@ -175,8 +175,38 @@ airgraph-assist/
 ├── llm/
 │   └── claude_client.py    # Claude API wrapper
 │
+├── evaluation/
+│   ├── run_evaluation.py   # Performance evaluator (metrics + plots)
+│   ├── queries.json        # Evaluation query set and expectations
+│   ├── metrics/            # JSON/CSV metric outputs
+│   └── images/             # Latency and quality plots
+│
+├── tests/
+│   └── test_evaluation.py  # Unit tests for evaluation logic
+│
 └── requirements.txt
 ```
+
+## Evaluation and Tests
+
+Run the performance evaluation suite:
+
+```bash
+python evaluation/run_evaluation.py
+```
+
+Run unit tests:
+
+```bash
+pytest -q
+```
+
+Evaluation artifacts are written to:
+
+- `evaluation/metrics/summary.json`
+- `evaluation/metrics/query_results.csv`
+- `evaluation/images/latency_breakdown.png`
+- `evaluation/images/quality_scores.png`
 
 ## Key Design Decisions
 
