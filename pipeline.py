@@ -16,11 +16,17 @@ class AirGraphPipeline:
         self.graph     = None
         self.retriever = None
         self.llm       = None
+        self.llm_init_error = ""
 
         try:
             self.graph     = GraphBuilder()
             self.retriever = HybridRetriever(self.graph)
-            self.llm       = ClaudeClient()
+            try:
+                self.llm = ClaudeClient()
+            except Exception as llm_exc:
+                self.llm = None
+                self.llm_init_error = str(llm_exc)
+                logger.warning(f"LLM unavailable, continuing in retrieval-only mode: {llm_exc}")
         except Exception:
             if self.graph:
                 try: self.graph.close()
@@ -56,15 +62,23 @@ class AirGraphPipeline:
                 }
 
             llm_start  = time.time()
-            raw_answer = self.llm.generate(self.build_prompt(user_query, context))
-            answer     = (raw_answer or "").strip() or \
-                         "Model returned an empty response."
+            if self.llm is None:
+                answer = (
+                    "LLM is unavailable. Returning retrieval context preview only.\n\n"
+                    + context[:1800]
+                )
+            else:
+                raw_answer = self.llm.generate(self.build_prompt(user_query, context))
+                answer     = (raw_answer or "").strip() or \
+                             "Model returned an empty response."
 
             timing = {
                 **result.get("timing", {}),
                 "llm_generation_ms": round((time.time()-llm_start)*1000, 1),
                 "total_ms":          round((time.time()-t0)*1000, 1),
             }
+            if self.llm_init_error:
+                timing["llm_error"] = self.llm_init_error
             return {
                 "answer":    answer,
                 "entities":  result.get("entities", []),

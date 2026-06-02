@@ -3,6 +3,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import math
 import time
+from config import CLAUDE_MODEL
 
 # =========================================================
 # PAGE CONFIG
@@ -172,11 +173,11 @@ EDGE_DESCRIPTIONS = {
 }
 
 SAMPLE_QUESTIONS = [
-    "What maintenance steps are required for the ROTAX 912S engine?",
-    "Which components are connected to the fuel system?",
-    "Show all safety warnings related to engine maintenance.",
-    "What tools are needed for hydraulic system inspection?",
-    "List airworthiness limitations for the Aquila AT01 aircraft.",
+    "What are the torque specifications and warnings for the oil filter?",
+    "What tools are required before starting the engine oil servicing task?",
+    "Which maintenance step comes immediately after draining engine oil?",
+    "List all safety warnings that apply before fuel system maintenance.",
+    "What airworthiness or inspection interval requirements are mentioned for engine servicing?",
 ]
 
 PIPELINE_STEPS = [
@@ -597,249 +598,56 @@ def render_graphrag_explainer() -> None:
 
 
 # =========================================================
-# HEADER
+# CHATGPT-STYLE LAYOUT
 # =========================================================
 
-st.markdown(
-    '<div class="hero">'
-    '<div class="hero-title">✈️ AirGraph Assist</div>'
-    '<div style="margin-top:10px">'
-    '<span class="hero-tag">Aquila AT01 (A210)</span>'
-    '<span class="hero-tag">Neo4j GraphRAG</span>'
-    '<span class="hero-tag">claude-haiku-4-5-20251001</span>'
-    '<span class="hero-tag">CPU-Optimised</span>'
-    '<span class="hero-tag">Multi-Hop Reasoning</span>'
-    '</div>'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-# =========================================================
-# METRICS ROW
-# =========================================================
-
-c1, c2, c3, c4 = st.columns(4)
-for col, (label, val) in zip(
-    [c1, c2, c3, c4],
-    [
-        ("Retrieval engine", "Neo4j GraphRAG"),
-        ("Language model",   "claude-haiku-4-5-20251001"),
-        ("Graph traversal",  "2-hop multi-hop"),
-        ("Hardware mode",    "CPU only"),
-    ],
-):
-    col.markdown(
-        f'<div class="metric-card">'
-        f'<div class="metric-label">{label}</div>'
-        f'<div class="metric-val">{val}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-st.markdown("<br>", unsafe_allow_html=True)
-
-# =========================================================
-# SIDEBAR
-# =========================================================
+st.title("AirGraph Assist")
+st.caption("Ask questions about the Aquila AT01 (A210) maintenance manual.")
 
 with st.sidebar:
-    st.markdown(
-        '<div style="font-family:\'JetBrains Mono\',monospace;font-size:1.1rem;'
-        'font-weight:600;color:#e8f2ff;padding:4px 0 2px 0">✈️ AirGraph Assist</div>',
-        unsafe_allow_html=True,
-    )
-    st.caption("Aquila AT01 (A210) · Maintenance Intelligence")
+    st.markdown("### System")
+    st.markdown(f"- **Model:** `{CLAUDE_MODEL}`")
+    st.markdown("- **Method:** `Hybrid GraphRAG (Graph + Vector + BM25 + Community)`")
+    st.markdown("- **Architecture:** `Neo4j + Streamlit + Claude`")
     st.divider()
-
-    # ── Sample questions ──────────────────────────────────────────────────────
-    st.markdown(
-        '<div class="section-head">💡 Sample questions</div>',
-        unsafe_allow_html=True,
-    )
-    st.caption("Click any question to send it instantly")
-
+    st.markdown("### Sample Questions")
     for i, q in enumerate(SAMPLE_QUESTIONS):
-        # BUG FIX B4: original showed questions as non-interactive HTML divs.
-        # Now each is a real button. Click sets pending_query + reruns the page.
         if st.button(q, key=f"sample_{i}", use_container_width=True):
             st.session_state.pending_query = q
             st.rerun()
 
-    st.divider()
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-    # ── Pipeline diagram ──────────────────────────────────────────────────────
-    st.markdown(
-        '<div class="section-head">⚙️ Pipeline steps</div>',
-        unsafe_allow_html=True,
-    )
-    steps_html = "".join(
-        f'<div class="step-row">'
-        f'<div class="step-icon">{icon}</div>'
-        f'<div><div class="step-name">{name}</div>'
-        f'<div class="step-desc">{desc}</div></div></div>'
-        for icon, name, desc in PIPELINE_STEPS
-    )
-    st.markdown(steps_html, unsafe_allow_html=True)
+chat_input = st.chat_input("Ask a maintenance question...")
+active_query = chat_input
+if not active_query and st.session_state.pending_query:
+    active_query = st.session_state.pending_query
+    st.session_state.pending_query = None
 
+if active_query:
+    st.session_state.messages.append({"role": "user", "content": active_query})
+    with st.chat_message("user"):
+        st.markdown(active_query)
 
-# =========================================================
-# MAIN LAYOUT
-# =========================================================
-
-left, right = st.columns([3, 2], gap="large")
-
-# =========================================================
-# CHAT PANEL
-# =========================================================
-
-with left:
-    st.subheader("💬 Maintenance Assistant")
-
-    # Render conversation history
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-
-    # Resolve query from chat box OR sample button click
-    # BUG FIX B4: sample buttons set pending_query; we consume it here.
-    chat_input   = st.chat_input("Ask an aerospace maintenance question…")
-    active_query = chat_input
-    if not active_query and st.session_state.pending_query:
-        active_query = st.session_state.pending_query
-        st.session_state.pending_query = None
-
-    if active_query:
-        st.session_state.messages.append({"role": "user", "content": active_query})
-
-        with st.chat_message("user"):
-            st.markdown(active_query)
-
-        with st.chat_message("assistant"):
-
-            # ── Real-time pipeline step tracker ───────────────────────────────
-            # Uses st.status so the user sees all 4 steps clearly while waiting.
-            # Steps show as ⏳ (pending) during the blocking pipeline call, then
-            # all update to ✅ (complete) with real data when it returns.
-            with st.status("🔍 GraphRAG pipeline running…", expanded=True) as pipe_status:
-                s1 = st.empty()
-                s2 = st.empty()
-                s3 = st.empty()
-                s4 = st.empty()
-
-                s1.markdown("⏳ **Step 1 — Entity Extraction** · scanning for component IDs and system names…")
-                s2.markdown("⏳ **Step 2 — Graph Traversal** · waiting…")
-                s3.markdown("⏳ **Step 3 — Context Compression** · waiting…")
-                s4.markdown("⏳ **Step 4 — LLM Generation** · waiting… *(30–90 s on CPU)*")
-
-                result = None
-                try:
-                    pipeline_fn = load_pipeline()
-                    t0          = time.time()
-                    result      = pipeline_fn(active_query)
-                    wall_ms     = (time.time() - t0) * 1000
-
-                    if not isinstance(result, dict):
-                        result = {
-                            "answer":    str(result),
-                            "timing":    {},
-                            "graph_viz": {},
-                            "entities":  [],
-                        }
-
-                    timing   = result.get("timing", {})
-                    entities = result.get("entities", [])
-                    viz      = result.get("graph_viz", {})
-                    llm_ms   = timing.get("llm_generation_ms", 0)
-                    fallback = timing.get("fallback_used", False)
-                    n_nodes  = len(viz.get("nodes", []))
-                    n_edges  = len(viz.get("edges", []))
-
-                    entity_str = (
-                        ", ".join(f"`{e}`" for e in entities[:5])
-                        if entities else "none matched"
-                    )
-
-                    s1.markdown(f"✅ **Step 1 — Entity Extraction** · {len(entities)} found: {entity_str}")
-                    s2.markdown(f"✅ **Step 2 — Graph Traversal** · {n_nodes} nodes, {n_edges} relationships")
-                    s3.markdown(
-                        f"✅ **Step 3 — Context Compression** · "
-                        f"{'graph + document fallback' if fallback else 'graph context only'}"
-                    )
-                    s4.markdown(f"✅ **Step 4 — LLM Generation** · completed in {llm_ms/1000:.1f} s")
-
-                    pipe_status.update(
-                        label=f"✅ Done in {wall_ms/1000:.1f} s",
-                        state="complete",
-                        expanded=False,
-                    )
-
-                except Exception as exc:
-                    pipe_status.update(label="❌ Pipeline error", state="error", expanded=True)
-                    st.error(f"Error: {exc}")
-                    result = None
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            result = None
+            try:
+                pipeline_fn = load_pipeline()
+                started = time.time()
+                result = pipeline_fn(active_query)
+                elapsed_ms = (time.time() - started) * 1000
+            except Exception as exc:
+                st.error(f"Pipeline error: {exc}")
 
             if result:
                 answer = result.get("answer") or "No answer was returned."
-
-                # BUG FIX B1: original called write_stream(stream_text) — passing
-                # the function object instead of the generator. st.write_stream
-                # expects a generator (iterable), not a callable.
-                # Fixed: define as a generator function and call it with ().
-                def token_stream():
-                    for word in answer.split(" "):
-                        yield word + " "
-                        time.sleep(0.015)
-
-                st.write_stream(token_stream())
-
+                timing = result.get("timing", {}) or {}
+                total_ms = float(timing.get("total_ms", elapsed_ms if "elapsed_ms" in locals() else 0))
+                st.markdown(answer)
+                if total_ms > 0:
+                    st.caption(f"Response time: {total_ms/1000:.2f}s")
                 st.session_state.last_result = result
                 st.session_state.messages.append({"role": "assistant", "content": answer})
-
-
-# =========================================================
-# INTELLIGENCE PANEL
-# =========================================================
-
-with right:
-    st.subheader("📊 Retrieval Intelligence")
-
-    graph_tab, timing_tab, guide_tab, explainer_tab = st.tabs([
-        "🔗 Knowledge Graph",
-        "⚡ Step Timing",
-        "📖 Node Guide",
-        "🧠 How GraphRAG Works",
-    ])
-
-    current_result = st.session_state.last_result
-
-    with graph_tab:
-        if current_result:
-            render_graph(current_result.get("graph_viz", {}))
-        else:
-            st.info(
-                "Run a query to see the knowledge subgraph.\n\n"
-                "The graph shows which nodes were retrieved and how they are connected — "
-                "this is the exact context sent to the LLM."
-            )
-
-    with timing_tab:
-        if current_result:
-            render_latency(current_result.get("timing", {}))
-        else:
-            st.info("Run a query to see per-step timing breakdown.")
-
-    with guide_tab:
-        render_node_guide()
-
-    with explainer_tab:
-        render_graphrag_explainer()
-
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-st.divider()
-st.caption(
-    "AirGraph Assist · Aquila AT01 (A210) Maintenance Intelligence · "
-    "Neo4j GraphRAG · Mistral 7B q4_K_M · CPU-optimised"
-)

@@ -20,7 +20,7 @@ COMMUNITY_FILE   = DATA_DIR / "communities.json"      # Step 5 output
 # ── Neo4j ──────────────────────────────────────────────────────────────────────
 NEO4J_URI      = os.getenv("NEO4J_URI",      "bolt://localhost:7687")
 NEO4J_USER     = os.getenv("NEO4J_USER",     "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "airbus2024")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "Safety2024")
 NEO4J_TIMEOUT  = 30
 
 # Vector index — must match embedding dimension below
