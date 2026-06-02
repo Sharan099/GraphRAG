@@ -141,7 +141,7 @@ Evaluation outputs:
 
 ## Demo Video
 
-[![GraphRAG Demo](assets/Thumbnail.png)](assets/AirGraph.mp4)
+[![GraphRAG Demo](assets/Thumbnail.png)](https://github.com/user-attachments/assets/11402388-9b65-487a-9fc1-d5076ba32844)
 
 ## Metrics Screenshot / Image
 
