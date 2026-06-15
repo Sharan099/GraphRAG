@@ -33,7 +33,12 @@ Open http://localhost:3000. Make sure the backend is running and
 1. Push this repo to GitHub.
 2. On [vercel.com](https://vercel.com) → **Add New → Project** → import the repo.
 3. Set the **Root Directory** to `frontend`.
-4. Add the env var `NEXT_PUBLIC_API_URL` = your Railway backend URL.
+4. Add the env var `NEXT_PUBLIC_API_URL` = your Railway backend URL, including
+   `https://`:
+
+   ```text
+   NEXT_PUBLIC_API_URL=https://graphrag-production-b584.up.railway.app
+   ```
 5. Deploy. Vercel auto-detects Next.js (`npm run build`).
 
 After the backend is live, set `ALLOWED_ORIGINS` on Railway to your Vercel URL.
