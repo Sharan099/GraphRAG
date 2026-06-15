@@ -1,0 +1,36 @@
+{
+  "skipped": false,
+  "evaluator": "groq:llama-3.3-70b-versatile",
+  "embeddings": "all-MiniLM-L6-v2",
+  "averages": {
+    "faithfulness": null,
+    "answer_relevancy": null,
+    "context_precision": null
+  },
+  "rows": [
+    {
+      "query": "What are the torque specifications and warnings for the oil filter?",
+      "faithfulness": null,
+      "answer_relevancy": null,
+      "context_precision": null
+    },
+    {
+      "query": "Which tools are required for hydraulic system inspection?",
+      "faithfulness": null,
+      "answer_relevancy": null,
+      "context_precision": null
+    },
+    {
+      "query": "List airworthiness requirements related to engine oil servicing.",
+      "faithfulness": null,
+      "answer_relevancy": null,
+      "context_precision": null
+    },
+    {
+      "query": "What maintenance steps should be followed before fuel system work?",
+      "faithfulness": null,
+      "answer_relevancy": null,
+      "context_precision": null
+    }
+  ]
+}

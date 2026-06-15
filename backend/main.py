@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from loguru import logger
 
-from config import CLAUDE_MODEL
+from config import LLM_MODEL
 
 # ──────────────────────────────────────────────────────────────────────────────
 # App + CORS
@@ -117,16 +117,16 @@ def health():
         "pipeline_ready": pipeline is not None,
         "llm_ready": bool(pipeline and pipeline.llm is not None),
         "error": _pipeline_error,
-        "model": CLAUDE_MODEL,
+        "model": LLM_MODEL,
     }
 
 
 @app.get("/api/meta")
 def meta():
     return {
-        "model": CLAUDE_MODEL,
+        "model": LLM_MODEL,
         "method": "Hybrid GraphRAG (Graph + Vector + BM25 + Community)",
-        "architecture": "Neo4j + FastAPI + Claude",
+        "architecture": "Neo4j + FastAPI + Qwen 3 32B (Groq)",
         "sample_questions": SAMPLE_QUESTIONS,
     }
 

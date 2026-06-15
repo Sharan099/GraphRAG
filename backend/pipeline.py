@@ -6,7 +6,7 @@ from loguru import logger
 
 from graph.builder       import GraphBuilder
 from retrieval.retriever import HybridRetriever
-from llm.claude_client   import ClaudeClient
+from llm.groq_client     import GroqClient
 
 
 class AirGraphPipeline:
@@ -22,7 +22,7 @@ class AirGraphPipeline:
             self.graph     = GraphBuilder()
             self.retriever = HybridRetriever(self.graph)
             try:
-                self.llm = ClaudeClient()
+                self.llm = GroqClient()
             except Exception as llm_exc:
                 self.llm = None
                 self.llm_init_error = str(llm_exc)
@@ -83,6 +83,7 @@ class AirGraphPipeline:
                 "answer":    answer,
                 "entities":  result.get("entities", []),
                 "graph_viz": result.get("graph_viz", {}),
+                "contexts":  result.get("contexts", []),
                 "timing":    timing,
             }
         except Exception as e:

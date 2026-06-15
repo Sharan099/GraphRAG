@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-06-15 17:03:43",
+  "graphrag": {
+    "queries_total": 4,
+    "queries_successful": 4,
+    "queries_failed": 0,
+    "total_ms_p50": 47187.1,
+    "total_ms_avg": 128805.1,
+    "keyword_recall_avg": 0.666
+  },
+  "standard_rag": {
+    "queries_total": 4,
+    "queries_successful": 4,
+    "queries_failed": 0,
+    "total_ms_p50": 35251.8,
+    "total_ms_avg": 35407.3,
+    "keyword_recall_avg": 0.666
+  },
+  "keyword_recall_absolute_gain": 0.0,
+  "keyword_recall_relative_improvement_pct": 0.0,
+  "avg_latency_delta_ms": 93397.8,
+  "note": "Standard RAG baseline uses vector + BM25 only. GraphRAG uses graph traversal + vector + BM25 + community summaries."
+}

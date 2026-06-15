@@ -383,6 +383,24 @@ class HybridRetriever:
 
         return "\n".join(lines)
 
+    def _context_snippets(self, text_results: list[dict], limit: int = 5) -> list[str]:
+        """Return plain text snippets for external evaluators such as RAGAS."""
+        snippets: list[str] = []
+        seen: set[str] = set()
+        for item in text_results:
+            text = (item.get("text") or "").strip()
+            if not text:
+                continue
+            key = item.get("id") or text[:120]
+            if key in seen:
+                continue
+            seen.add(key)
+            title = item.get("title", "")
+            snippets.append(f"{title}\n{text}".strip())
+            if len(snippets) >= limit:
+                break
+        return snippets
+
     # ── Main retrieve ─────────────────────────────────────────────────────────
 
     def retrieve(self, query: str) -> dict:
@@ -406,6 +424,7 @@ class HybridRetriever:
         )
 
         context = self._compress(graph_nodes, graph_rels, text_results)
+        contexts = self._context_snippets(text_results)
 
         timing["total_ms"] = round((time.time() - t0) * 1000, 1)
         timing["entities_found"] = len(
@@ -421,8 +440,42 @@ class HybridRetriever:
         return {
             "query":     query,
             "context":   context,
+            "contexts":  contexts,
             "entities":  [n["node"].get("id") for n in graph_nodes[:8]
                           if n["node"].get("id")],
             "graph_viz": graph_viz,
             "timing":    timing,
+        }
+
+    def retrieve_standard_rag(self, query: str) -> dict:
+        """
+        Baseline retriever for evaluation.
+
+        This intentionally disables graph traversal and community summaries so
+        we can compare AirGraph's hybrid GraphRAG against a standard chunk-based
+        RAG baseline using only vector similarity + BM25 keyword search.
+        """
+        t0 = time.time()
+        vector_results = self._vector_path(query)
+        bm25_results = self._bm25_path(query)
+        text_results = sorted(
+            vector_results + bm25_results,
+            key=lambda x: -x.get("score", 0)
+        )
+        context = self._compress([], [], text_results)
+        contexts = self._context_snippets(text_results)
+
+        return {
+            "query": query,
+            "context": context,
+            "contexts": contexts,
+            "entities": [],
+            "graph_viz": {"nodes": [], "edges": []},
+            "timing": {
+                "total_ms": round((time.time() - t0) * 1000, 1),
+                "entities_found": 0,
+                "vector_used": len(vector_results) > 0,
+                "bm25_used": len(bm25_results) > 0,
+                "fallback_used": True,
+            },
         }

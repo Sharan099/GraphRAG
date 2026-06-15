@@ -1,0 +1,9 @@
+# Optional evaluation dependencies.
+#
+# Keep these separate from requirements.txt so the Railway API deploy stays
+# small and does not install evaluator-only packages.
+# RAGAS runs on the free stack: Qwen-on-Groq as the evaluator LLM (via the
+# async OpenAI-compatible client, already a ragas dependency) and the local
+# all-MiniLM-L6-v2 embeddings (sentence-transformers, already in requirements).
+-r requirements.txt
+ragas>=0.4.0

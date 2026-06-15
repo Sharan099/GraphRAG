@@ -4,7 +4,8 @@ uvicorn[standard]>=0.29.0
 pydantic>=2.6.0
 
 # ── GraphRAG pipeline ──────────────────────────────────────────────
-anthropic>=0.40.0
+groq>=0.11.0
+python-dotenv>=1.0.0
 neo4j>=5.0.0
 sentence-transformers>=2.7.0
 rank-bm25>=0.2.2
@@ -16,6 +17,9 @@ loguru>=0.7.0
 # ── Data prep / offline pipeline (chunking, extraction, evaluation) ─
 pymupdf>=1.23.0
 matplotlib>=3.8.0
+# Only needed to REBUILD the graph from the PDF (extractor.py / community.py).
+# Not required to serve answers — the graph artefacts are already committed.
+anthropic>=0.40.0
 
 # ── Tests ──────────────────────────────────────────────────────────
 pytest>=8.0.0
