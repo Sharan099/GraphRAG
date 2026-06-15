@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets — never bake into the image
+.env
+.env.*
+!.env.example
+
+# Git / editor
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Local pipeline scratch
+data/.cache/
+data/.batch_id
+data/.seq_progress.json
+
+# Source PDF is only needed to REBUILD the graph, not to serve answers (~10 MB).
+data/*.pdf
+
+# Dev / evaluation outputs (not used by the API)
+tests/
+evaluation/metrics/
+evaluation/images/
+requirements-eval.txt
+
+# Docs
+README.md
+*.md
