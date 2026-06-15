@@ -34,14 +34,24 @@ app = FastAPI(
 # Comma-separated list of allowed origins, e.g.
 #   ALLOWED_ORIGINS="https://airgraph.vercel.app,http://localhost:3000"
 # Defaults to "*" so a fresh deploy works before you lock it down.
+#
+# Trailing slashes are stripped because browsers send the Origin header WITHOUT a
+# path (e.g. "https://app.vercel.app"), so a configured "https://app.vercel.app/"
+# would never match and every request would fail CORS with "Disallowed origin".
 _origins_env = os.getenv("ALLOWED_ORIGINS", "*").strip()
 allow_origins = ["*"] if _origins_env in ("", "*") else [
-    o.strip() for o in _origins_env.split(",") if o.strip()
+    o.strip().rstrip("/") for o in _origins_env.split(",") if o.strip()
 ]
+
+# Always allow any Vercel deployment (production + preview URLs) so the frontend
+# keeps working even if ALLOWED_ORIGINS is missing or misconfigured. Local dev
+# origins are matched too. This regex is additive to allow_origins above.
+allow_origin_regex = r"https://([a-z0-9-]+\.)*vercel\.app|http://localhost(:\d+)?"
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allow_origins,
+    allow_origin_regex=allow_origin_regex,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
