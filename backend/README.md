@@ -69,6 +69,11 @@ Docker — Railway uses them automatically.
    and the `NEO4J_*` values). `PORT` is injected by Railway automatically.
 5. Deploy. Railway builds the image and health-checks `/api/health`.
 
+Do not set a custom Railway start command for the Docker deployment. The
+Dockerfile already starts Uvicorn with `sh -c`, which expands Railway's runtime
+`PORT` correctly. A dashboard start command like `--port $PORT` can be passed
+literally and fail with `'$PORT' is not a valid integer`.
+
 The image is optimized for fast cold starts: CPU-only PyTorch and the
 `all-MiniLM-L6-v2` embedding model are baked in at build time, so the first
 request doesn't wait on a model download.
