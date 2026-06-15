@@ -1,5 +1,0 @@
-id,query,total_ms,llm_generation_ms,retrieval_ms,entities_found,answer_chars,keyword_recall,error
-Q1,What are the torque specifications and warnings for the oil filter?,34250.5,2982.7,31267.8,8,711,1.0,
-Q2,Which tools are required for hydraulic system inspection?,3564.4,2458.2,1106.2,8,672,1.0,
-Q3,List airworthiness requirements related to engine oil servicing.,4350.8,2832.9,1517.9,8,594,1.0,
-Q4,What maintenance steps should be followed before fuel system work?,10440.3,4747.8,5692.5,8,1177,1.0,

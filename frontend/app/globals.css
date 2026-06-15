@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(59, 130, 246, 0.12), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(96, 165, 250, 0.08), transparent 55%),
+    #050e1a;
+  color: #dce9f8;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Slim, themed scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #163d6b transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #163d6b;
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #1d4e85;
+}
+
+/* Rendered answer typography */
+.answer h1,
+.answer h2,
+.answer h3,
+.answer h4 {
+  font-family: var(--font-mono), monospace;
+  color: #e8f2ff;
+  font-weight: 600;
+  margin: 0.9rem 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+.answer h4 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7bb8f8;
+}
+.answer p {
+  margin: 0.5rem 0;
+  line-height: 1.65;
+}
+.answer ul,
+.answer ol {
+  margin: 0.4rem 0 0.6rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.answer ul {
+  list-style: disc;
+}
+.answer ol {
+  list-style: decimal;
+}
+.answer strong {
+  color: #e8f2ff;
+  font-weight: 600;
+}
+.answer code {
+  font-family: var(--font-mono), monospace;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  border-radius: 5px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.85em;
+  color: #9ec9fb;
+}

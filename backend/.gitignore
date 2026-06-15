@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets
+.env
+
+# Local pipeline scratch
+data/.cache/
+data/.batch_id
+data/.seq_progress.json
+
+# NOTE: data/*.json artefacts (chunks, entities, embeddings, communities)
+# ARE committed so the deployed API works out of the box.

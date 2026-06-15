@@ -1,0 +1,21 @@
+# ── Web API (Railway) ──────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+
+# ── GraphRAG pipeline ──────────────────────────────────────────────
+anthropic>=0.40.0
+neo4j>=5.0.0
+sentence-transformers>=2.7.0
+rank-bm25>=0.2.2
+networkx>=3.0
+python-louvain>=0.16
+numpy>=1.24.0
+loguru>=0.7.0
+
+# ── Data prep / offline pipeline (chunking, extraction, evaluation) ─
+pymupdf>=1.23.0
+matplotlib>=3.8.0
+
+# ── Tests ──────────────────────────────────────────────────────────
+pytest>=8.0.0

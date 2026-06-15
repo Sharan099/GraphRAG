@@ -1,0 +1,9 @@
+{
+  "queries_total": 4,
+  "queries_successful": 4,
+  "queries_failed": 0,
+  "total_ms_p50": 7395.5,
+  "total_ms_avg": 13151.5,
+  "keyword_recall_avg": 1.0,
+  "generated_at": "2026-06-02 12:30:14"
+}

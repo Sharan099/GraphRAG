@@ -1,10 +1,31 @@
-data/*.json
-data/.cache/
-data/.batch_id
-data/.seq_progress.json
+# ── OS / editor ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ── Secrets ────────────────────────────────────────────────────────
 .env
+*.env.local
+
+# ── Python (backend) ───────────────────────────────────────────────
 __pycache__/
 *.pyc
-V1
-*.sh
-*.bat 
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+backend/data/.cache/
+backend/data/.batch_id
+backend/data/.seq_progress.json
+
+# ── Node / Next.js (frontend) ──────────────────────────────────────
+node_modules/
+.next/
+out/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# NOTE: backend/data/*.json artefacts (chunks, entities, embeddings,
+# communities) are intentionally committed so the deployed API works.
